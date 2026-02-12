@@ -21,6 +21,7 @@ void Robot::RobotPeriodic() {
 
   m_container.m_vision->getCameraRobotPoses();
 
+
   for (auto const& [id, obj] : m_container.m_vision->targetMap) {
     fmt::print("Key ID: {}, Struct Data -> ID: {}, X: {:.2f}, Y: {:.2f}, Z: {:.2f}\n", 
                 id, obj.id, obj.x, obj.y, obj.z);

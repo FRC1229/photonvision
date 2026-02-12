@@ -17,38 +17,35 @@ VisionSubsystem::VisionSubsystem() = default;
 void VisionSubsystem::Periodic() {}
 
 
-photon::PhotonPipelineResult VisionSubsystem::getResult(){
-    if(camera.GetLatestResult().HasTargets()){
-        return camera.GetLatestResult();
-    }
-}
+// photon::PhotonPipelineResult VisionSubsystem::getResult(){
+//     if(camera.GetLatestResult().HasTargets()){
+//         return camera.GetLatestResult();
+//     }
+// }
 
-photon::PhotonTrackedTarget VisionSubsystem::BestResult(){
-    if(getResult().HasTargets()){
-        return getResult().GetBestTarget();
-    }
-}
+// photon::PhotonTrackedTarget VisionSubsystem::BestResult(){
+//     if(getResult().HasTargets()){
+//         return getResult().GetBestTarget();
+//     }
+// }
 
 
 void VisionSubsystem::getCameraRobotPoses(){
-    
-    if (getResult().HasTargets()) {
         
         std::vector<photon::PhotonPipelineResult> unreadResults = camera.GetAllUnreadResults();
         if (unreadResults.empty()) {
             std::cout << "Camera has no results" << std::endl;
         } else {
             targetMap.clear();
-            for (auto target : getResult().GetTargets()) {
-                TargetObj targetObj;
-                frc::Transform3d best_camera_to_target = target.GetBestCameraToTarget();
-
-                targetObj.id = target.GetFiducialId();
-                targetObj.x = best_camera_to_target.X().value();
-                targetObj.y = best_camera_to_target.Y().value();
-                targetObj.z = best_camera_to_target.Z().value();
-
-                targetMap[targetObj.id] = targetObj;
+            for (const auto& res : unreadResults) {
+                for (const auto& target : res.GetTargets()) {
+                    TargetObj targetObj;
+                    frc::Transform3d bestTarget = target.GetBestCameraToTarget();
+                    targetObj.id = target.GetFiducialId();
+                    targetObj.x = bestTarget.X().value();
+                    targetObj.x = bestTarget.Y().value();
+                    targetObj.x = bestTarget.Z().value();
+        
 
                 
             }
