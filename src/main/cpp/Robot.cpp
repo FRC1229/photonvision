@@ -32,10 +32,18 @@ void Robot::RobotPeriodic() {
 
   // m_container.m_vision->getCameraRobotPoses();
 
+<<<<<<< HEAD
   // for (auto const& [id, obj] : m_container.m_vision->targetMap) {
   //   fmt::print("Key ID: {}, Struct Data -> ID: {}, X: {:.2f}, Y: {:.2f}, Z: {:.2f}\n", 
   //               id, obj.id, obj.x, obj.y, obj.z);
   // }
+=======
+
+  for (auto const& [id, obj] : m_container.m_vision->targetMap) {
+    fmt::print("Key ID: {}, Struct Data -> ID: {}, X: {:.2f}, Y: {:.2f}, Z: {:.2f}\n", 
+                id, obj.id, obj.x, obj.y, obj.z);
+  }
+>>>>>>> 3ab3f46bf23f643f98b168bbc62ba16b3eb51162
   
 }
 
