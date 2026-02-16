@@ -24,11 +24,16 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
+  bool Is500msLoop(int offset);
+
+  
+  int myloopcounter = 0;
 
  private:
   // Have it empty by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
   std::optional<frc2::CommandPtr> m_autonomousCommand;
+  photon::PhotonCamera camera{"cam1229_2"};
 
   RobotContainer m_container;
 };
