@@ -9,7 +9,9 @@
 #include "networktables/NetworkTableInstance.h"
 #include <photon/PhotonCamera.h>
 #include <photon/targeting/PhotonPipelineResult.h>
+#include <photon/struct/PhotonTrackedTargetStruct.h>
 #include <iostream>
+#include <cmath>
 
 
 Robot::Robot() {}
@@ -32,18 +34,10 @@ void Robot::RobotPeriodic() {
 
   // m_container.m_vision->getCameraRobotPoses();
 
-<<<<<<< HEAD
   // for (auto const& [id, obj] : m_container.m_vision->targetMap) {
   //   fmt::print("Key ID: {}, Struct Data -> ID: {}, X: {:.2f}, Y: {:.2f}, Z: {:.2f}\n", 
   //               id, obj.id, obj.x, obj.y, obj.z);
   // }
-=======
-
-  for (auto const& [id, obj] : m_container.m_vision->targetMap) {
-    fmt::print("Key ID: {}, Struct Data -> ID: {}, X: {:.2f}, Y: {:.2f}, Z: {:.2f}\n", 
-                id, obj.id, obj.x, obj.y, obj.z);
-  }
->>>>>>> 3ab3f46bf23f643f98b168bbc62ba16b3eb51162
   
 }
 
@@ -84,18 +78,34 @@ void Robot::TeleopInit() {
   frc::CameraServer::StartAutomaticCapture();
 }
 
+
+
 /**
  * This function is called periodically during operator control.
  */
 void Robot::TeleopPeriodic() {
-  std::vector<photon::PhotonPipelineResult> results = camera.GetAllUnreadResults();
-  for (auto result : results) {
-    if (result.HasTargets()) {
-      // test this loop thorugh targets
-      auto targets = result.GetTargets();
-      for (auto target : targets) {
-        std::cout << target.GetFiducialId() << std::endl;
-      }
+  // std::vector<photon::PhotonPipelineResult> results = camera.GetAllUnreadResults();
+  
+  // double cameraHeight = 0.67;
+
+  // for (auto result : results) {
+  //   if (result.HasTargets()) {
+      
+  //     // test this loop thorugh targets
+  //     auto targets = result.GetTargets();
+  //     float targetPitch = targets[0].GetPitch() + 90.0 - 32;
+  //     float targetYaw = targets[0].GetYaw();
+  //     double YtoTarget = cameraHeight * std::tan(targetPitch * (M_PI / 180.0));
+  //     double XtoTarget = std::abs(targetYaw * (M_PI / 180.0)) * YtoTarget;
+      
+      // for (auto target : targets) {
+      //   // std::cout << target.GetPitch() << std::endl;
+      //   targetPitch = target.GetPitch() + 90.0;
+        
+      // }
+      // std::cout <<  YtoTarget << ", " << XtoTarget << std::endl;
+
+
       // TTHIS IS CODE ISTN TESTED, PLEASE TEST
       
       // std::cout << result.GetTargets().size() << std::endl;
@@ -107,16 +117,21 @@ void Robot::TeleopPeriodic() {
       // }
 
       // std::cout << " TRUE" << std::endl;
-    } else {
+    // } else {
       // std::cout << " FALSE" << std::endl;
-    }
-  }
-  
-  // myloopcounter++;
-  
-  // if (myloopcounter>=3000) {
-  //   myloopcounter = 0;
+    // }
   // }
+  
+  myloopcounter++;
+  
+  if (myloopcounter>=3000) {
+    myloopcounter = 0;
+  }
+
+  if (myloopcounter >= 25) {
+    myloopcounter = 0;
+    m_container.m_vision->getCameraRobotPoses();
+  }
 
   // nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   // if (inst.IsConnected()) {

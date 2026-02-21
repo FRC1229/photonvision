@@ -8,6 +8,7 @@
 #include <photon/PhotonCamera.h>
 #include <photon/PhotonPoseEstimator.h>
 #include <photon/PhotonUtils.h>
+#include <frc/controller/PIDController.h>
 #include <vector>
 #include <map>
 #include <unordered_map>
@@ -27,24 +28,22 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   std::shared_ptr<std::map<int, TargetObj>> targetResult;
   std::unordered_map<int, TargetObj> targetMap;
-<<<<<<< HEAD
-  // photon::PhotonCamera camera{"cam1229_2"};
+  
   photon::PhotonTrackedTarget BestResult();
   photon::PhotonTrackedTarget ClosestTarget();
   photon::PhotonPipelineResult getResult();
-=======
-  photon::PhotonCamera camera{"1229_Camera"};
-  // photon::PhotonTrackedTarget BestResult();
-  // photon::PhotonTrackedTarget ClosestTarget();
-  // photon::PhotonPipelineResult getResult();
-
->>>>>>> 3ab3f46bf23f643f98b168bbc62ba16b3eb51162
+  
+  void XAutoAlign() {};
+  void YAutoAlign() {};
+  
   void getCameraRobotPoses();
   
   bool wasPrevNull = false;
   bool gotCamResults = false;
+  std::unordered_map<int, std::pair<double, double>> ballPositions;
 
  private:
+  
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
   

@@ -12,6 +12,7 @@
 #include <vector>
 #include <iostream>
 #include <ostream>
+#include <unordered_map>
 
 
 VisionSubsystem::VisionSubsystem() = default;
@@ -20,7 +21,6 @@ VisionSubsystem::VisionSubsystem() = default;
 void VisionSubsystem::Periodic() {}
 
 
-<<<<<<< HEAD
 photon::PhotonPipelineResult VisionSubsystem::getResult(){
     // if(camera.GetLatestResult().HasTargets()){
     //     return camera.GetLatestResult();
@@ -33,27 +33,66 @@ photon::PhotonTrackedTarget VisionSubsystem::BestResult(){
     // }
    
 }
-=======
-// photon::PhotonPipelineResult VisionSubsystem::getResult(){
-//     if(camera.GetLatestResult().HasTargets()){
-//         return camera.GetLatestResult();
-//     }
-// }
-
-// photon::PhotonTrackedTarget VisionSubsystem::BestResult(){
-//     if(getResult().HasTargets()){
-//         return getResult().GetBestTarget();
-//     }
-// }
->>>>>>> 3ab3f46bf23f643f98b168bbc62ba16b3eb51162
 
 // std::ostream& operator<<(std::ostream& out, const Course* course) {
 //     out << course.getName();
 //     return out;
 // }
-
+photon::PhotonCamera camera{"innomakercam_1229"};
+bool test = false;
 void VisionSubsystem::getCameraRobotPoses(){
-<<<<<<< HEAD
+    
+    std::vector<photon::PhotonPipelineResult> results = camera.GetAllUnreadResults();
+    
+
+    // double imageWidth = 640.0;
+    // double centerX = imageWidth / 2.0;
+
+    int id = 0;
+    
+    double cameraHeight = 0.37;
+    if (results.size()==0) {
+        std::cout << "no";
+    }
+    for (auto result : results) {
+        if (result.HasTargets()) {
+            // std::cout << "yay" << std::endl;
+            // // test this loop thorugh targets
+            auto targets = result.GetTargets();
+            
+      
+            for (auto target : targets) {
+                float targetPitch = target.GetPitch() + 90.0 - 6;
+                float targetYaw = target.GetYaw();
+                double YtoTarget = cameraHeight * std::tan(targetPitch * (M_PI / 180.0));
+                double XtoTarget = std::abs(targetYaw * (M_PI / 180.0)) * YtoTarget;
+                //targetPitch = target.GetPitch() + 90.0;
+                // distToTarget = cameraHeight*std::tan(targetPitch);
+                ballPositions[id] = {XtoTarget, YtoTarget};
+                id++;
+                
+            }
+            
+        } else {
+            std::cout << "bad jesse" << std::endl;
+        }
+    }
+    if (test == false) {
+        for (auto const& ball : ballPositions) {
+            int id = ball.first;
+            double x = ball.second.first;
+            double y = ball.second.second;
+
+            std::cout << "Ball "
+                    << id
+                    << " -> X: "
+                    << x
+                    << " -> Y: "
+                    << y
+                    << std::endl;
+        }
+        test = true;
+    }
     // auto result = camera.GetLatestResult();
     // bool hasTarget = result.HasTargets();
     // auto results = camera.GetAllUnreadResults();
@@ -91,28 +130,17 @@ void VisionSubsystem::getCameraRobotPoses(){
     //             targetObj.z = best_camera_to_target.Z().value();
 
     //             targetMap[targetObj.id] = targetObj;
-=======
-        
-        std::vector<photon::PhotonPipelineResult> unreadResults = camera.GetAllUnreadResults();
-        if (unreadResults.empty()) {
-            std::cout << "Camera has no results" << std::endl;
-        } else {
-            targetMap.clear();
-            for (const auto& res : unreadResults) {
-                for (const auto& target : res.GetTargets()) {
-                    TargetObj targetObj;
-                    frc::Transform3d bestTarget = target.GetBestCameraToTarget();
-                    targetObj.id = target.GetFiducialId();
-                    targetObj.x = bestTarget.X().value();
-                    targetObj.x = bestTarget.Y().value();
-                    targetObj.x = bestTarget.Z().value();
-        
->>>>>>> 3ab3f46bf23f643f98b168bbc62ba16b3eb51162
 
                 
     //         }
     //     }
     // }
+    
+}
+
+
+
+void VisionSubsystem::XAutoAlign() {
     
 }
 
