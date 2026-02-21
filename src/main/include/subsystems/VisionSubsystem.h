@@ -33,14 +33,17 @@ class VisionSubsystem : public frc2::SubsystemBase {
   photon::PhotonTrackedTarget ClosestTarget();
   photon::PhotonPipelineResult getResult();
   
-  void XAutoAlign() {};
-  void YAutoAlign() {};
-  
+  void putShuffleboard();
+  double getTX();
+  double getTY();
+  double getDistance(double targetHeight);
+  std::vector<double> getPose();
+
   void getCameraRobotPoses();
   
   bool wasPrevNull = false;
   bool gotCamResults = false;
-  std::unordered_map<int, std::pair<double, double>> ballPositions;
+  std::unordered_map<int, std::array<double, 3>> ballPositions;
 
  private:
   

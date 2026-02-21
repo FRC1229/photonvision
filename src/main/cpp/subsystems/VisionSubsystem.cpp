@@ -68,7 +68,7 @@ void VisionSubsystem::getCameraRobotPoses(){
                 double XtoTarget = std::abs(targetYaw * (M_PI / 180.0)) * YtoTarget;
                 //targetPitch = target.GetPitch() + 90.0;
                 // distToTarget = cameraHeight*std::tan(targetPitch);
-                ballPositions[id] = {XtoTarget, YtoTarget};
+                ballPositions[id] = std::array<double, 3>{XtoTarget, YtoTarget, targetYaw};
                 id++;
                 
             }
@@ -80,8 +80,8 @@ void VisionSubsystem::getCameraRobotPoses(){
     if (test == false) {
         for (auto const& ball : ballPositions) {
             int id = ball.first;
-            double x = ball.second.first;
-            double y = ball.second.second;
+            double x = ball.second[0];
+            double y = ball.second[1];
 
             std::cout << "Ball "
                     << id
@@ -139,8 +139,4 @@ void VisionSubsystem::getCameraRobotPoses(){
 }
 
 
-
-void VisionSubsystem::XAutoAlign() {
-    
-}
 

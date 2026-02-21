@@ -25,20 +25,7 @@ Robot::Robot() {}
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-  
 
-
-
-  // frc2::CommandScheduler::GetInstance().Run();
-  //unreadResults = m_container.m_vision->camera.GetAllUnreadResults();
-
-  // m_container.m_vision->getCameraRobotPoses();
-
-  // for (auto const& [id, obj] : m_container.m_vision->targetMap) {
-  //   fmt::print("Key ID: {}, Struct Data -> ID: {}, X: {:.2f}, Y: {:.2f}, Z: {:.2f}\n", 
-  //               id, obj.id, obj.x, obj.y, obj.z);
-  // }
-  
 }
 
 /**
@@ -55,72 +42,44 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  // m_autonomousCommand = m_container.GetAutonomousCommand();
+  //m_container.m_arm.CalibrateEncoderValue();
+  m_container.m_drive.ZeroHeading();
+  m_container.m_drive.ResetEncoders();
+  m_container.m_drive.ResetOdometry(frc::Pose2d{2_m,7_m,frc::Rotation2d{0_deg}});
+  
+  m_autonomousCommand = m_container.getAutonomousCommand();
 
-  // if (m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
-  // }
+  if (m_autonomousCommand) {                      //This code checks if `m_autonomousCommand` is not null and, if valid, 
+    m_autonomousCommand->Schedule();               //schedules it to run during the autonomous period.
+  }
 }
 
-void Robot::AutonomousPeriodic() {}
 
+void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {
+  m_container.m_drive.ZeroHeading();
+  m_container.m_drive.ResetEncoders();
+  m_container.m_drive.ResetOdometry(frc::Pose2d{0_m,0_m,frc::Rotation2d{0_deg}});
+
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
   // this line or comment it out.
-  // if (m_autonomousCommand) {
-  //   m_autonomousCommand->Cancel();
-  // }
-  // camera{"cam1229_2"};
-  //unreadResults = m_container.m_vision->camera.GetAllUnreadResults();
+  //m_container.m_arm.CalibrateEncoderValue();
+
   
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Cancel();
+  }
+  m_container.m_drive.ZeroHeading();
   frc::CameraServer::StartAutomaticCapture();
 }
-
 
 
 /**
  * This function is called periodically during operator control.
  */
 void Robot::TeleopPeriodic() {
-  // std::vector<photon::PhotonPipelineResult> results = camera.GetAllUnreadResults();
-  
-  // double cameraHeight = 0.67;
-
-  // for (auto result : results) {
-  //   if (result.HasTargets()) {
-      
-  //     // test this loop thorugh targets
-  //     auto targets = result.GetTargets();
-  //     float targetPitch = targets[0].GetPitch() + 90.0 - 32;
-  //     float targetYaw = targets[0].GetYaw();
-  //     double YtoTarget = cameraHeight * std::tan(targetPitch * (M_PI / 180.0));
-  //     double XtoTarget = std::abs(targetYaw * (M_PI / 180.0)) * YtoTarget;
-      
-      // for (auto target : targets) {
-      //   // std::cout << target.GetPitch() << std::endl;
-      //   targetPitch = target.GetPitch() + 90.0;
-        
-      // }
-      // std::cout <<  YtoTarget << ", " << XtoTarget << std::endl;
-
-
-      // TTHIS IS CODE ISTN TESTED, PLEASE TEST
-      
-      // std::cout << result.GetTargets().size() << std::endl;
-      // for (auto target : result.GetTargets()) {
-      //   std::cout << target.GetBestCameraToTarget().X().value() << std::endl;
-      // }
-      // for (auto target : result.GetTargets()) {
-      //   std::cout << target. << std::endl;
-      // }
-
-      // std::cout << " TRUE" << std::endl;
-    // } else {
-      // std::cout << " FALSE" << std::endl;
-    // }
-  // }
   
   myloopcounter++;
   
@@ -128,44 +87,22 @@ void Robot::TeleopPeriodic() {
     myloopcounter = 0;
   }
 
-  if (myloopcounter >= 25) {
+  if (Is500msLoop(0)) {
     myloopcounter = 0;
     m_container.m_vision->getCameraRobotPoses();
+    
   }
 
-  // nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
-  // if (inst.IsConnected()) {
-  //   if (m_container.m_vision == nullptr) {
-  //     auto unreadResults = camera.GetAllUnreadResults();
-  //     std::cout << "yay"  << std::endl;
-  //   } else {
-  //     std::cout << "jesse's fault" << std::endl;
-  //   }
-  //   // std::cout << "hello" << std::endl;
-  //   // if (Is500msLoop(0)) {
-  //   //   std::cout << "boom " << std::endl;
-  //   //   unreadResults = m_container.m_vision->camera.GetAllUnreadResults();
-  //   //   std::cout << "ran" << std::endl;
-  //   // }
-  // } else {
-  //   std::cout << "banana" << std::endl;
-  // }
-  // // if (Is500msLoop(0) && m_container.m_vision->camera.IsConnected()) {
-  // //   m_container.m_vision->getCameraRobotPoses();
-  //   // std::cout << m_container.m_vision-> camera.IsConnected() << std::endl;
-  //   //std::cout << m_container.m_vision->camera.IsConnected() << std::endl;
-  // // } else if (Is500msLoop(0)) {
-  // //   std::cout << "hello world" << std::endl;
-  // // }
+
 }
 
-// bool Robot::Is500msLoop(int offset) {
-//   bool retb = false;
-//   if (((myloopcounter)%25) == 0) {
-//     retb = true;
-//   }
-//   return retb;
-// }
+bool Robot::Is500msLoop(int offset) {
+  bool retb = false;
+  if (((myloopcounter)%25) == 0) {
+    retb = true;
+  }
+  return retb;
+}
 
 /**
  * This function is called periodically during test mode.
